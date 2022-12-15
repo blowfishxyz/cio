@@ -157,10 +157,17 @@ impl Airtable {
         table: &str,
         view: &str,
         fields: Vec<&str>,
+        filter_by_formula: Option<&str>,
     ) -> Result<Vec<Record<T>>> {
         let mut params = vec![("pageSize", "100".to_string()), ("view", view.to_string())];
         for field in fields {
             params.push(("fields[]", field.to_string()));
+        }
+        match filter_by_formula {
+            None => (),
+            Some(val) => {
+                params.push(("filterByFormula", val.to_string()));
+            }
         }
 
         // Build the request.
